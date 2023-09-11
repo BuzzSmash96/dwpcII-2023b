@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var debug = require('debug')('dwpcii-2023b:server');
+const fetch = require('node-fetch'); // Asegúrate de tener node-fetch instalado
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,17 +22,49 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Crea un server de archivos estaticos
+// Crea un server de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-//registro de middelware de aplicacion
+// Registro de middlewares de aplicación
 app.use('/', indexRouter);
-//active users router cuando se
-//solicita users
+// Activa users router cuando se solicita users
 app.use('/users', usersRouter);
-// app.use('/author', (req, res)=>{
-//   res.json({mainDeveloper: "Ivan Rivalcoba"})
-// });
+
+// Nuevas rutas
+app.get('/about/tec', async function(req, res) {
+    try {
+        
+        const imageUrl = 'https://www.gamadero.tecnm.mx/ideologia/ideologia.png';
+        const response = await fetch(imageUrl);
+        
+        if (response.ok) {
+            const buffer = await response.buffer();
+            const base64Image = buffer.toString('base64');
+            
+           
+            res.render('about_tec', { base64Image });
+        } else {
+            
+            res.status(500).send('No se pudo obtener la imagen.');
+        }
+    } catch (error) {
+        
+        console.error(error);
+        res.status(500).send('Error al obtener la imagen.');
+    }
+});
+
+app.get('/about/api/tec', function(req, res) {
+    var data = {
+        name: 'Tec de Gustavo A Madero',
+        description: 'algo',
+        mission: {
+            values: 10
+        },
+        image: 'imagen aleatoria del texto'
+    };
+    res.json(data);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
