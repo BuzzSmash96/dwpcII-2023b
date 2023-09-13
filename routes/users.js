@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-// GET /users
+/* GET /users */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
 // GET /users/author
 router.get('/author', function(_, res) {
-  res.render('author', {author: "Ricardo Cortes"});
+  res.render('author', {author: 'Ricardo Cortes',
+style: './stylesheets/style.css'})
 });
 
 module.exports = router;
