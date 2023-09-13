@@ -4,67 +4,35 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var debug = require('debug')('dwpcii-2023b:server');
-const fetch = require('node-fetch'); // Asegúrate de tener node-fetch instalado
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var tecRouter = require('./routes/tec');
 
-// Creando la instancia de express
+// creando la instancia de express
 var app = express();
 
-// Configurando el motor de plantillas
+// configurando el motor de plantillas
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// Se establecen los middlewares
+// se establecen los middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// Crea un server de archivos estáticos
+// crear un server de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Registro de middlewares de aplicación
 app.use('/', indexRouter);
-// Activa users router cuando se solicita users
+// activa "usersRouter" cuando se
+// solicita "/users"
 app.use('/users', usersRouter);
+/* app.use('/author', (req, res) => {
+  res.json({mainDeveloper: "Joshua Barajas"})
+}) */
 
-// Nuevas rutas
-app.get('/about/tec', async function(req, res) {
-    try {
-        
-        const imageUrl = 'https://www.gamadero.tecnm.mx/ideologia/ideologia.png';
-        const response = await fetch(imageUrl);
-        
-        if (response.ok) {
-            const buffer = await response.buffer();
-            const base64Image = buffer.toString('base64');
-            
-           
-            res.render('about_tec', { base64Image });
-        } else {
-            
-            res.status(500).send('No se pudo obtener la imagen.');
-        }
-    } catch (error) {
-        
-        console.error(error);
-        res.status(500).send('Error al obtener la imagen.');
-    }
-});
-
-app.get('/about/api/tec', function(req, res) {
-    var data = {
-        name: 'Tec de Gustavo A Madero',
-        description: 'algo',
-        mission: {
-            values: 10
-        },
-        image: 'imagen aleatoria del texto'
-    };
-    res.json(data);
-});
+app.use('/about', tecRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
