@@ -6,6 +6,9 @@
         "es2021": true,
         "node": true
     },
+    "settings": {
+        "import/resolver" : { "babel-module" : {}}
+      },
     "extends": "airbnb-base",
     "parserOptions": {
         "ecmaVersion": "latest",
