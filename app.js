@@ -16,7 +16,7 @@ import webpackConfig from '../webpack.dev.config';
 var debug = require('./services/debugLogger');
 
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/users');
 
 // creando la instancia de express
