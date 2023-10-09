@@ -1,8 +1,8 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 // var debug = require('debug')('dwpcii1:server');
 
 // Setting Webpack Modules
@@ -12,46 +12,47 @@ import WebpackHotMiddleware from 'webpack-hot-middleware';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
 
-//example to import debugLogger
-var debug = require('./services/debugLogger');
+// example to import debugLogger
+import debug from './services/debugLogger';
 
-
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users');
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
 
 // creando la instancia de express
-var app = express();
+const app = express();
 
 // Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production';
 
-if(nodeEnviroment === 'development'){
+if (nodeEnviroment === 'development') {
   // Start Webpack dev server
-  console.log("🛠️  Ejecutando en modo desarrollo");
-  // using debug 
-  debug('✒ Ejecutando en modo de desarrollo 👨‍💻')
+  console.log('🛠️  Ejecutando en modo desarrollo');
+  // using debug
+  debug('✒ Ejecutando en modo de desarrollo 👨‍💻');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
   // Setting the dev server port to the same value as the express server
   webpackConfig.devServer.port = process.env.PORT;
   // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
-    "webpack-hot-middleware/client?reload=true&timeout=1000",
-    webpackConfig.entry
+    'webpack-hot-middleware/client?reload=true&timeout=1000',
+    webpackConfig.entry,
   ];
-	// Agregar el plugin a la configuración de desarrollo
+  // Agregar el plugin a la configuración de desarrollo
   // de webpack
   webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   // Creating the bundler
   const bundle = webpack(webpackConfig);
   // Enabling the webpack middleware
-  app.use( WebpackDevMiddleware(bundle, {
-    publicPath: webpackConfig.output.publicPath
-  }) );
+  app.use(
+    WebpackDevMiddleware(bundle, {
+      publicPath: webpackConfig.output.publicPath,
+    })
+  );
   //  Enabling the webpack HMR
-  app.use( WebpackHotMiddleware(bundle) );
-}else{
-  console.log("🏭 Ejecutando en modo producción 🏭");
+  app.use(WebpackHotMiddleware(bundle));
+} else {
+  console.log('🏭 Ejecutando en modo producción 🏭');
 }
 
 // configurando el motor de plantillas
@@ -75,12 +76,12 @@ app.use('/users', usersRouter);
 }) */
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -90,4 +91,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;
