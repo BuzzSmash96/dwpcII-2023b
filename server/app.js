@@ -1,9 +1,12 @@
+// Helps to handle http errors
 import createError from 'http-errors';
+// Import the Express Library
 import express from 'express';
+// Is a Core-Node library to manage system paths
 import path from 'path';
+// Helps to parse client cookies
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-// var debug = require('debug')('dwpcii1:server');
+// Library to log http communication
 
 // Setting Webpack Modules
 import webpack from 'webpack';
@@ -12,35 +15,29 @@ import WebpackHotMiddleware from 'webpack-hot-middleware';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
 
-// example to import debugLogger
-import debug from './services/debugLogger';
+// Creando variable del directorio raiz
+// eslint-disable-next-line
+global['__rootdir'] = path.resolve(process.cwd());
 
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
-
-// creando la instancia de express
+// We are creating the express instance
 const app = express();
 
 // Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production';
 
+// Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
   console.log('🛠️  Ejecutando en modo desarrollo');
-  // using debug
-  debug('✒ Ejecutando en modo de desarrollo 👨‍💻');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
-  // Setting the dev server port to the same value as the express server
+  // Setting the port
   webpackConfig.devServer.port = process.env.PORT;
   // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
     'webpack-hot-middleware/client?reload=true&timeout=1000',
     webpackConfig.entry,
   ];
-  // Agregar el plugin a la configuración de desarrollo
-  // de webpack
-  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   // Creating the bundler
   const bundle = webpack(webpackConfig);
   // Enabling the webpack middleware
@@ -55,25 +52,19 @@ if (nodeEnviroment === 'development') {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
 
-// configurando el motor de plantillas
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// Configuring the template engine
 
-// se establecen los middlewares
-app.use(logger('dev'));
+// Registering middlewares
+// Log all received requests
+
+// Parse request data into json
 app.use(express.json());
+// Decode url info
 app.use(express.urlencoded({ extended: false }));
+// Parse client cookies into json
 app.use(cookieParser());
-// crear un server de archivos estáticos
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
-app.use('/', indexRouter);
-// activa "usersRouter" cuando se
-// solicita "/users"
-app.use('/users', usersRouter);
-/* app.use('/author', (req, res) => {
-  res.json({mainDeveloper: "Joshua Barajas"})
-}) */
+// Set up the static file server
+app.use(express.static(path.join(__dirname, '../public')));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
