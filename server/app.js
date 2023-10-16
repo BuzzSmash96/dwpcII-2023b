@@ -2,7 +2,6 @@
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
 
 // Setting Webpack Modules
 import webpack from 'webpack';
@@ -14,9 +13,6 @@ import configTemplateEngine from './config/templateEngine';
 
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
-
-// Impornting winston logger
-import log from './config/winston';
 
 // Importing Router
 import router from './router';
@@ -55,7 +51,7 @@ if (nodeEnviroment === 'development') {
   app.use(
     WebpackDevMiddleware(bundle, {
       publicPath: webpackConfig.output.publicPath,
-    }),
+    })
   );
   //  Enabling the webpack HMR
   app.use(WebpackHotMiddleware(bundle));
@@ -67,7 +63,6 @@ if (nodeEnviroment === 'development') {
 configTemplateEngine(app);
 
 // Se establecen los middlewares
-app.use(morgan('dev', { stream: log.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

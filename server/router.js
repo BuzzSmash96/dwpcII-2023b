@@ -1,6 +1,5 @@
 import createError from 'http-errors';
 // Impornting winston logger
-import log from './config/winston';
 
 // Importando enrutador home
 import homeRouter from './domains/home/home.router';
@@ -13,7 +12,6 @@ const addRoutes = (app) => {
   // ERRORES
   // catch 404 and forward to error handler
   app.use((req, res, next) => {
-    log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
     next(createError(404));
   });
 
@@ -25,7 +23,6 @@ const addRoutes = (app) => {
 
     // render the error page
     res.status(err.status || 500);
-    log.error(`${err.status || 500} - ${err.message}`);
     res.render('error');
   });
 
