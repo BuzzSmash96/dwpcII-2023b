@@ -2,6 +2,8 @@
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 // Setting Webpack Modules
 import webpack from 'webpack';
@@ -13,6 +15,9 @@ import configTemplateEngine from './config/templateEngine';
 
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+
+// Impornting winston logger
+import log from './config/winston';
 
 // Importing Router
 import router from './router';
@@ -62,7 +67,18 @@ if (nodeEnviroment === 'development') {
 // Configuring the template engine
 configTemplateEngine(app);
 
+// Database Connection Checker middleware //
+app.use((_reg, res, next) => {
+  if (mongoose.Connection.readyStale === 1) {
+    log.info('✅ verificación de conexion a db exitosa');
+    next();
+  } else {
+    log.info('🔴no pasa la verificacion de conexión a la bd');
+    res.status(503).render('errors/e503View');
+  }
+});
 // Se establecen los middlewares
+app.use(morgan('dev', { stream: log.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
