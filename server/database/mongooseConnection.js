@@ -1,4 +1,4 @@
-import mongoose, { connection } from 'mongoose';
+import mongoose from 'mongoose';
 import log from '../config/winston';
 // creando funcion de conexion //
 

@@ -41,4 +41,5 @@ function getEnvConfig(env) {
 
 export default {
   ...defaultConfig,
+  ...getEnvConfig(process.env.NODE_ENV),
 };

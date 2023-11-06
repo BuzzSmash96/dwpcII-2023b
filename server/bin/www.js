@@ -84,6 +84,9 @@ function onListening() {
   log.info(`📢 Listening on ${bind}`);
 }
 
+// Launching db connection
+connectWithRetry(configKeys.MONGO_URL);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
