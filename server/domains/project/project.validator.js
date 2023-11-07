@@ -9,17 +9,16 @@ const projectSchema = Yup.object().shape({
 });
 
 // Middleware de extracción
-const getProyect = (req) => {
-
-// Extrayendo datos de petición
- const { name , description } = req.body;
- return { 
-    name, 
-    description, 
+const getProject = (req) => {
+  // Extrayendo datos de petición
+  const { name, description } = req.body;
+  return {
+    name,
+    description,
+  };
 };
-}; 
 
- export default { 
-    projectSchema, 
-    getProject, };
+export default {
+  projectSchema,
+  getProject,
 };
