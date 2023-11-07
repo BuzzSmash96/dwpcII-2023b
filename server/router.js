@@ -3,11 +3,13 @@ import createError from 'http-errors';
 
 // Importando enrutador home
 import homeRouter from './domains/home/home.router';
+import proyectRouter from './domains/project/project.router';
 
 // Función que agrega rutas
 const addRoutes = (app) => {
   // Agregando enrutado de Home
   app.use('/', homeRouter);
+  app.use('/projects', proyectRouter);
 
   // ERRORES
   // catch 404 and forward to error handler

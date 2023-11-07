@@ -6,7 +6,8 @@ const projects = (req, res) => {
 };
 
 const forms = (req, res) => {
-  res.send("🚧 UNDER CONSTRUCTION '/user/project/[add-form o add]' 🚧");
+  // res.send("🚧 UNDER CONSTRUCTION '/user/project/[add-form o add]' 🚧");
+  res.render('project/addView');
 };
 
 // Controlador Home
