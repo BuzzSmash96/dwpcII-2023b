@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 const projectSchema = Yup.object().shape({
   name: Yup.string().required('se requiere nombre del proyecto'),
   description: Yup.string()
-    .max('la descripción debe no tener mas de 500 caracteres ')
+    .max(500, 'la descripción debe no tener mas de 500 caracteres ')
     .required('se requiere una descripcion de proyecto'),
 });
 
