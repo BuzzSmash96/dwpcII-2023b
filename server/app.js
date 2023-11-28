@@ -4,6 +4,8 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+// Enable post and delete verbs
+import methodOverride from 'method-override';
 
 // Setting Webpack Modules
 import webpack from 'webpack';
@@ -15,6 +17,9 @@ import configTemplateEngine from './config/templateEngine';
 
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+
+// Importando configurador de sesiones
+import configSession from './config/configSessions';
 
 // Impornting winston logger
 import log from './config/winston';
@@ -67,21 +72,26 @@ if (nodeEnviroment === 'development') {
 // Configuring the template engine
 configTemplateEngine(app);
 
-// Database Connection Checker middleware //
+// Database connection Checker Middleware
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
-    log.info('✅ verificación de conexion a db exitosa');
+    log.info('✅ Verificación de conexión a db existosa.');
     next();
   } else {
-    log.info('🔴no pasa la verificacion de conexión a la bd');
-    res.status(503).render('errors/e503View');
+    log.info('🔴 No pasa la verificacion de conexión a la BD');
+    res.status(503).render('errors/e503View', { layout: 'errors' });
   }
 });
+
 // Se establecen los middlewares
 app.use(morgan('dev', { stream: log.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// Enable post and delete verbs
+app.use(methodOverride('_method'));
+// Habilitando manejo de sesiones y mensajes flash
+configSession(app);
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
